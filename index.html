@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Store Closing Checklist</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #38bdf8;
+      --accent-dim: #0ea5e9;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --success: #4ade80;
+      --border: #334155;
+      --danger: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .progress-wrap {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-dim), var(--success));
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 0.9rem 1.1rem;
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      background: #1e293b;
+    }
+
+    .section-header:hover {
+      background: #243044;
+    }
+
+    .section-count {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .section-body {
+      padding: 0.5rem 1.1rem 1rem;
+      display: none;
+    }
+
+    .section.open .section-body {
+      display: block;
+    }
+
+    .section.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    .chevron {
+      transition: transform 0.2s;
+      color: var(--muted);
+    }
+
+    .task {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .task:last-child {
+      border-bottom: none;
+    }
+
+    .task input[type="checkbox"] {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-top: 0.15rem;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .task label {
+      flex: 1;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .task.done label {
+      text-decoration: line-through;
+      color: var(--muted);
+    }
+
+    .task .note {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .sub-tasks {
+      margin-left: 2rem;
+      margin-top: 0.4rem;
+      padding-left: 0.75rem;
+      border-left: 2px solid var(--border);
+    }
+
+    .sub-tasks .task {
+      padding: 0.4rem 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+    }
+
+    .btn-primary:hover {
+      background: #7dd3fc;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--card);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: rgba(248, 113, 113, 0.15);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    @media (min-width: 480px) {
+      header h1 {
+        font-size: 1.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Store Closing Checklist</h1>
+      <p>Tap sections to expand. Progress saves automatically.</p>
+    </header>
+
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span>Progress</span>
+        <span id="progress-text">0 / 0</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Section 1: Money & Prep -->
+    <div class="section open" data-section="money">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span>Money & Prep</span>
+        <span>
+          <span class="section-count" data-count></span>
+          <span class="chevron">▼</span>
+        </span>
+      </div>
+      <div class="section-body">
+        <div class="task">
+          <input type="checkbox" id="t1" data-id="t1" />
+          <label for="t1">Remember A vs B tills</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t2" data-id="t2" />
+          <label for="t2">Money</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t3" data-id="t3" />
+          <label for="t3">Other</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t4" data-id="t4" />
+          <label for="t4">0101</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t5" data-id="t5" />
+          <label for="t5">Doors</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t6" data-id="t6" />
+          <label for="t6">Drop vault</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Close Checklist -->
+    <div class="section" data-section="close">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span>Close Checklist</span>
+        <span>
+          <span class="section-count" data-count></span>
+          <span class="chevron">▼</span>
+        </span>
+      </div>
+      <div class="section-body">
+        <div class="task">
+          <input type="checkbox" id="t7" data-id="t7" />
+          <label for="t7">Login</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t8" data-id="t8" />
+          <label for="t8">Hamburger menu</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t9" data-id="t9" />
+          <label for="t9">Cash management</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t10" data-id="t10" />
+          <label for="t10">End of day</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t11" data-id="t11" />
+          <label for="t11">Count money</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t12" data-id="t12" />
+          <label for="t12">Email if over/under $1
+            <span class="note">Send to Cashsupport@…</span>
+          </label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t13" data-id="t13" />
+          <label for="t13">Deposit actual (without change)</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t14" data-id="t14" />
+          <label for="t14">Deposit checks next (if any)</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t15" data-id="t15" />
+          <label for="t15">Crest paperwork</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Launchpad -->
+    <div class="section" data-section="launchpad">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span>Launchpad (Hamburger)</span>
+        <span>
+          <span class="section-count" data-count></span>
+          <span class="chevron">▼</span>
+        </span>
+      </div>
+      <div class="section-body">
+        <div class="task">
+          <input type="checkbox" id="t16" data-id="t16" />
+          <label for="t16">Deposit bag creation</label>
+        </div>
+        <div class="sub-tasks">
+          <div class="task">
+            <input type="checkbox" id="t16a" data-id="t16a" />
+            <label for="t16a">New</label>
+          </div>
+          <div class="task">
+            <input type="checkbox" id="t16b" data-id="t16b" />
+            <label for="t16b">New</label>
+          </div>
+          <div class="task">
+            <input type="checkbox" id="t16c" data-id="t16c" />
+            <label for="t16c">Register B = 2</label>
+          </div>
+          <div class="task">
+            <input type="checkbox" id="t16d" data-id="t16d" />
+            <label for="t16d">Same for checks</label>
+          </div>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t17" data-id="t17" />
+          <label for="t17">Print</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t18" data-id="t18" />
+          <label for="t18">Transaction audit</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t19" data-id="t19" />
+          <label for="t19">Change drawer to 101 or 102</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t20" data-id="t20" />
+          <label for="t20">Hit Go → Report to print</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t21" data-id="t21" />
+          <label for="t21">In report: Goods returned → Print</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: 0202 -->
+    <div class="section" data-section="0202">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span>0202</span>
+        <span>
+          <span class="section-count" data-count></span>
+          <span class="chevron">▼</span>
+        </span>
+      </div>
+      <div class="section-body">
+        <div class="task">
+          <input type="checkbox" id="t22" data-id="t22" />
+          <label for="t22">Insert bills</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t23" data-id="t23" />
+          <label for="t23">Enter</label>
+        </div>
+        <div class="task">
+          <input type="checkbox" id="t24" data-id="t24" />
+          <label for="t24">Enter cash</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary" onclick="expandAll()">Expand All</button>
+      <button class="btn-secondary" onclick="collapseAll()">Collapse All</button>
+      <button class="btn-danger" onclick="resetAll()">Reset Checklist</button>
+    </div>
+
+    <footer>
+      Closing Task List · Progress saved in this browser
+    </footer>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "closing-checklist-v1";
+
+    function toggleSection(header) {
+      header.parentElement.classList.toggle("open");
+    }
+
+    function expandAll() {
+      document.querySelectorAll(".section").forEach(s => s.classList.add("open"));
+    }
+
+    function collapseAll() {
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("open"));
+    }
+
+    function getCheckboxes() {
+      return document.querySelectorAll('input[type="checkbox"][data-id]');
+    }
+
+    function updateProgress() {
+      const boxes = getCheckboxes();
+      const total = boxes.length;
+      let done = 0;
+      boxes.forEach(cb => {
+        if (cb.checked) done++;
+        const task = cb.closest(".task");
+        if (task) task.classList.toggle("done", cb.checked);
+      });
+
+      document.getElementById("progress-text").textContent = `${done} / ${total}`;
+      document.getElementById("progress-fill").style.width = total ? `${(done / total) * 100}%` : "0%";
+
+      // Per-section counts
+      document.querySelectorAll(".section").forEach(section => {
+        const sectionBoxes = section.querySelectorAll('input[type="checkbox"][data-id]');
+        const sectionDone = [...sectionBoxes].filter(b => b.checked).length;
+        const countEl = section.querySelector("[data-count]");
+        if (countEl) countEl.textContent = `${sectionDone}/${sectionBoxes.length}`;
+      });
+
+      saveState();
+    }
+
+    function saveState() {
+      const state = {};
+      getCheckboxes().forEach(cb => {
+        state[cb.dataset.id] = cb.checked;
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const state = JSON.parse(raw);
+        getCheckboxes().forEach(cb => {
+          if (state[cb.dataset.id]) cb.checked = true;
+        });
+      } catch (e) {
+        console.warn("Could not load saved checklist", e);
+      }
+    }
+
+    function resetAll() {
+      if (!confirm("Reset all checkboxes? This cannot be undone.")) return;
+      getCheckboxes().forEach(cb => (cb.checked = false));
+      updateProgress();
+    }
+
+    // Init
+    document.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      getCheckboxes().forEach(cb => {
+        cb.addEventListener("change", updateProgress);
+      });
+      updateProgress();
+    });
+  </script>
+</body>
+</html>
